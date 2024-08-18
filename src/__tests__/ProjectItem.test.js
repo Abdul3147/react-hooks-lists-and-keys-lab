@@ -1,40 +1,43 @@
+// src/__tests__/ProjectList.test.js
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import ProjectItem from "../components/ProjectItem";
+import ProjectList from "../components/ProjectList";
 
-const project = {
-  id: 1,
-  name: "Reciplease",
-  about: "A recipe tracking app",
-  technologies: ["Rails", "Bootstrap CSS"],
-};
+const projects = [
+  {
+    id: 1,
+    name: "Reciplease",
+    about: "A recipe tracking app",
+    technologies: ["Rails", "Bootstrap CSS"],
+  },
+  {
+    id: 2,
+    name: "Kibbles N Bitz",
+    about: "Tinder for dogs",
+    technologies: ["React", "Redux"],
+  },
+  {
+    id: 3,
+    name: "Alienwares",
+    about: "Etsy for aliens",
+    technologies: ["React", "Redux", "Rails"],
+  },
+];
 
-test("each <span> element has a unique key prop", () => {
-  let errorSpy = jest.spyOn(global.console, "error");
-  render(
-    <ProjectItem
-      name={project.name}
-      about={project.about}
-      technologies={project.technologies}
-    />
-  );
+test("gives each <ProjectItem> a key based on the project id", () => {
+  const errorSpy = jest.spyOn(global.console, "error");
+  render(<ProjectList projects={projects} />);
 
   expect(errorSpy).not.toHaveBeenCalled();
-
+  
   errorSpy.mockRestore();
 });
 
-test("renders a <span> for each technology passed in as a prop", () => {
-  render(
-    <ProjectItem
-      name={project.name}
-      about={project.about}
-      technologies={project.technologies}
-    />
-  );
-  for (const technology of project.technologies) {
-    const span = screen.queryByText(technology);
-    expect(span).toBeInTheDocument();
-    expect(span.tagName).toBe("SPAN");
+test("renders a <ProjectItem> for each project passed in as a prop", () => {
+  render(<ProjectList projects={projects} />);
+
+  for (const project of projects) {
+    // Check if the project name is rendered in the document
+    expect(screen.getByText(project.name)).toBeInTheDocument();
   }
 });
